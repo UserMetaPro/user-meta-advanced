@@ -11,7 +11,7 @@ global $userMeta;
         <div class="metabox-holder">
             <div id="um_admin_content">
                 
-                <form method="post" onsubmit="pfAjaxRequest(this); return false;" />
+                <form method="post" id="um_advanced_settings" onsubmit="pfAjaxRequest(this); return false;" />
                 <div id="um_advanced_tabs">
                     <ul>
                         <li><a href="#um_advanced_tab_integration"><?php _e( 'Plugins Integration', 'user-meta-advanced' ) ?></a></li>     

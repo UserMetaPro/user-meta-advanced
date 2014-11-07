@@ -37,6 +37,9 @@ $loginInputs = array(
     'button_class'      => null,
     'before_button'     => null,
     'after_button'      => null,
+    
+    'group_6'           => 'group',
+    'registration_link_class'   => null,
 );
 
 $lostpassInputs = array(
@@ -122,6 +125,7 @@ $resetpassInputs = array(
                     'value'         => isset( $login[ $key ]  ) ? $login[ $key ] : '',
                     'class'         => 'pf_width_50',
                     'label_class'   => 'um_label_left',
+                    'label_style'   => 'width:30%',
                     'enclose'       => 'p'
                 ) );
             } elseif( $val == 'group' ) {
