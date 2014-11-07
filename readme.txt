@@ -3,8 +3,8 @@ Contributors: khaledsaikat
 Donate link: http://user-meta.com/donation
 Tags: user-meta, user-meta-pro, user, profile, registration, login, user meta, user meta, pro, add-on
 Requires at least: 3.3.0
-Tested up to: 3.9.1
-Stable tag: 1.0.0
+Tested up to: 4.0
+Stable tag: 1.0.1
 Copyright: Khaled Hossain, user-meta.com
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,6 +34,9 @@ As this plugin is an add-on of [User Meta Pro](http://user-meta.com/ "User Meta 
 
 
 == Changelog ==
+
+= 1.0.1 =
+* Plugin Integrate: Generate wpml-config.xml to translate dynamic text via WPML. 
 
 = 1.0.0 =
 * Integrations of filters and actions hook.

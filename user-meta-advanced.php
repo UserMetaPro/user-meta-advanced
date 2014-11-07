@@ -4,7 +4,7 @@ Plugin Name: User Meta Advanced
 Plugin URI: http://wordpress.org/plugins/user-meta-advanced/
 Description: User Meta Pro add-on for advanced settings.
 Author: Khaled Hossain
-Version: 1.0.0
+Version: 1.0.1
 Author URI: http://khaledsaikat.com
 */
 
