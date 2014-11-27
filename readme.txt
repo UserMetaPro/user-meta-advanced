@@ -17,6 +17,7 @@ This plugin is an add-on of [User Meta Pro](http://user-meta.com/ "User Meta Pro
 
 = Features: =
 * Integrate other plugin's functionality with User Meta Pro.
+* Generate wpml-config.xml for WPML translation.
 * Override WordPress user registration and reset password email.
 * Personalize views of login, lost password and reset password forms.
 
