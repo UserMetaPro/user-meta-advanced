@@ -3,7 +3,7 @@ Contributors: khaledsaikat
 Donate link: http://user-meta.com/donation
 Tags: user-meta, user-meta-pro, user, profile, registration, login, user meta, user meta, pro, add-on
 Requires at least: 3.3.0
-Tested up to: 4.0
+Tested up to: 4.5
 Stable tag: 1.0.1
 Copyright: Khaled Hossain, user-meta.com
 License: GPLv2 or later
