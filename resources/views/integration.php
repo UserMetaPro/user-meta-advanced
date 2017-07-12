@@ -53,10 +53,3 @@ echo $userMeta->createInput( 'integration[override_resetpass_email]', 'checkbox'
 echo "<p>Enable those checkboxes to override default WordPress emails with User Meta Pro generated emails. "
 . "This could be useful, when you need registration form other than us but custom email notification by UMP. </p>";
 
-?>
-
-<?php if ( version_compare( $userMeta->version, '1.1.7rc1', '>=' ) ) : ?>
-    <div class='pf_divider'></div>
-    <h4>WPML</h4>
-    <a href="javascript:void(0)" class="button-secondary um_generate_wpml_config">Generate wpml-config.xml</a>
-<?php endif; ?>

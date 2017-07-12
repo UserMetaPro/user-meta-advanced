@@ -20,6 +20,10 @@ class GeneralController
             $this,
             'pluginSettingsLink'
         ]);
+        add_filter('user_meta_admin_pages', [
+            $this,
+            'addAdvancedMenu'
+        ]);
     }
 
     /**
@@ -48,5 +52,50 @@ class GeneralController
         $settings_link = '<a href="' . get_admin_url(null, 'admin.php?page=user-meta-advanced') . '">Settings</a>';
         array_unshift($links, $settings_link);
         return $links;
+    }
+
+    /**
+     * Adding new menu to UserMeta menu
+     */
+    public function addAdvancedMenu($pages)
+    {
+        global $userMeta;
+        $pages['advanced'] = array(
+            'menu_title' => __('Advanced', $userMeta->name),
+            'page_title' => __('Advanced Settings', $userMeta->name),
+            'menu_slug' => 'user-meta-advanced',
+            'position' => 5,
+            'is_free' => true,
+            'callback' => [
+                $this,
+                'advancedMenuHtml'
+            ]
+        );
+        
+        return $pages;
+    }
+
+    /**
+     * Content of UserMeta/Advanced menu
+     */
+    public function advancedMenuHtml()
+    {
+        global $userMeta, $userMetaAdvancedBase;
+        $userMeta->enqueueScripts([
+            'jquery-ui-core',
+            'jquery-ui-tabs',
+            'jquery-ui-all',
+            
+            'user-meta',
+            'user-meta-admin',
+            'bootstrap',
+            'bootstrap-multiselect',
+            'multiple-select'
+        ]);
+        $userMeta->runLocalization();
+        
+        echo $userMetaAdvancedBase->view('advancedPage', [
+            'advanced' => $userMeta->getData('advanced')
+        ]);
     }
 }
