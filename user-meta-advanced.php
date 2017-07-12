@@ -7,67 +7,17 @@
  * Version: 1.1
  * Author URI: http://khaledsaikat.com
  */
-if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
-    exit('Please don\'t access this file directly.');
-}
+namespace UserMeta\Advanced;
 
-class userMetaAdvanced
-{
+/**
+ *
+ * @todo Handle exception when PluginBase not found
+ */
+add_action('user_meta_plugin_loaded', function () {
+    global $userMetaAdvancedBase;
+    $userMetaAdvancedBase = new \UserMeta\PluginBase(__FILE__);
+    $userMetaAdvancedBase->setNamespace(__NAMESPACE__);
+    $userMetaAdvancedBase->loadControllers();
+});
 
-    function __construct()
-    {
-        $this->callHooks();
-    }
 
-    function callHooks()
-    {
-        add_filter('user_meta_load_extension', array(
-            $this,
-            'loadExtension'
-        ));
-        add_action('plugins_loaded', array(
-            $this,
-            'loadTextDomain'
-        ));
-        add_action('admin_menu', array(
-            $this,
-            'pluginActionLink'
-        ));
-    }
-
-    /**
-     * Register as user-meta's extensions
-     * models, controllers and views path will added by user-meta
-     *
-     * @param array $extensions            
-     * @return array
-     */
-    function loadExtension($extensions)
-    {
-        $extensions['advanced'] = dirname(__FILE__);
-        
-        return $extensions;
-    }
-
-    function loadTextDomain()
-    {
-        load_plugin_textdomain('user-meta-advanced', false, dirname(__FILE__) . '/helper/languages');
-    }
-
-    function pluginActionLink()
-    {
-        add_filter('plugin_action_links_' . plugin_basename(__FILE__), array(
-            $this,
-            '_pluginSettingsMenu'
-        ));
-    }
-
-    function _pluginSettingsMenu($links)
-    {
-        $settings_link = '<a href="' . get_admin_url(null, 'admin.php?page=user-meta-advanced') . '">Settings</a>';
-        array_unshift($links, $settings_link);
-        return $links;
-    }
-}
-
-$userMetaAdvanced = new userMetaAdvanced();

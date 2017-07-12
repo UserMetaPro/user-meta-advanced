@@ -1,5 +1,5 @@
 <?php
-global $userMeta; 
+global $userMeta, $userMetaAdvancedBase; 
 // Expected: $advanced
 ?>
 
@@ -20,7 +20,7 @@ global $userMeta;
                     
                     <div id="um_advanced_tab_integration">
                         <?php
-                        echo $html = $userMeta->renderPro( 'integration', array(
+                        echo $html = $userMetaAdvancedBase->view( 'integration', array(
                             'integration' => ! empty( $advanced['integration'] ) ? $advanced['integration'] : array(),
                         ), 'advanced', true );
                         ?>
@@ -28,7 +28,7 @@ global $userMeta;
                     
                     <div id="um_advanced_tab_views">
                         <?php
-                        echo $html = $userMeta->renderPro( 'viewsInject', array(
+                        echo $html = $userMetaAdvancedBase->view( 'viewsInject', array(
                             'views' => ! empty( $advanced['views'] ) ? $advanced['views'] : array(),
                         ), 'advanced', true );
                         ?>

@@ -1,7 +1,7 @@
 <?php
-namespace UserMeta;
+namespace UserMeta\Advanced;
 
-class umAdvancedHooksController
+class HooksController
 {
 
     function __construct()
@@ -10,12 +10,12 @@ class umAdvancedHooksController
             $this,
             'generateWpmlConfig'
         ));
-
+        
         add_filter('user_meta_admin_pages', array(
             $this,
             'addAdvancedMenu'
         ));
-
+        
         add_filter('user_meta_wp_hook', array(
             $this,
             'toggleWpHooks'
@@ -33,49 +33,78 @@ class umAdvancedHooksController
     function addAdvancedMenu($pages)
     {
         global $userMeta;
-
+        
         $pages['advanced'] = array(
             'menu_title' => __('Advanced', $userMeta->name),
             'page_title' => __('Advanced Settings', $userMeta->name),
             'menu_slug' => 'user-meta-advanced',
             'position' => 5,
-            'is_free' => true
+            'is_free' => true,
+            'callback' => [
+                $this,
+                'advancedMenuHtml'
+            ]
         );
-
+        
         return $pages;
+    }
+
+    public function advancedMenuHtml()
+    {
+        global $userMeta, $userMetaAdvancedBase;
+        $userMeta->enqueueScripts([
+            'jquery-ui-core',
+            'jquery-ui-tabs',
+            'jquery-ui-all',
+            
+            'user-meta',
+            'user-meta-admin',
+            'bootstrap',
+            'bootstrap-multiselect',
+            'multiple-select'
+        ]);
+        $userMeta->runLocalization();
+        
+        echo $userMetaAdvancedBase->view('advancedPage', [
+            'advanced' => $userMeta->getData('advanced')
+        ]);
+        
+        $userMeta->renderPro('advancedPage', [
+            'advanced' => $userMeta->getData('advanced')
+        ], 'advanced');
     }
 
     function toggleWpHooks($enable, $hookName, $args)
     {
         global $userMeta;
-
+        
         $advanced = $userMeta->getData('advanced');
-
+        
         if (empty($advanced['integration']['ump_wp_hooks']))
             return $enable;
-
+        
         return in_array($hookName, $advanced['integration']['ump_wp_hooks']) ? true : false;
     }
 
     function hookViews($configs, $key)
     {
         global $userMeta;
-
+        
         $advanced = $userMeta->getData('advanced');
         if (! empty($advanced['views'][$key]))
             return $advanced['views'][$key];
-
+        
         return $configs;
     }
 
     function hookLoginForm($configs)
     {
         global $userMeta;
-
+        
         $advanced = $userMeta->getData('advanced');
         if (! empty($advanced['views']['login']))
             return $advanced['views']['login'];
-
+        
         return $configs;
     }
 
@@ -83,22 +112,22 @@ class umAdvancedHooksController
     {
         global $userMeta;
         $userMeta->verifyNonce();
-
+        
         if (! $userMeta->isAdmin())
             return;
-
+        
         if (! is_writable($userMeta->pluginPath))
             return;
-
+        
         $writer = new \XMLWriter();
         $writer->openURI($userMeta->pluginPath . '/wpml-config.xml');
         // $writer->openURI( 'php://output' );
         // $writer->startDocument('1.0','UTF-8');
         $writer->setIndent(4);
-
+        
         $writer->startElement('wpml-config');
         $writer->startElement('admin-texts');
-
+        
         /**
          * user_meta_fields
          */
@@ -109,19 +138,19 @@ class umAdvancedHooksController
             foreach ($fields as $id => $field) {
                 $writer->startElement('key');
                 $writer->writeAttribute('name', $id);
-
-                if (!empty($field['field_title']))
+                
+                if (! empty($field['field_title']))
                     $this->attWriter('field_title', $writer);
-                if (!empty($field['description']))
+                if (! empty($field['description']))
                     $this->attWriter('description', $writer);
-                if (!empty($field['options']))
+                if (! empty($field['options']))
                     $this->_writeOptionsLabels($field['options'], $writer);
-
+                
                 $writer->endElement();
             }
             $writer->endElement();
         }
-
+        
         /**
          * user_meta_forms
          */
@@ -132,36 +161,36 @@ class umAdvancedHooksController
             foreach ($forms as $formID => $form) {
                 $writer->startElement('key');
                 $writer->writeAttribute('name', $formID);
-
+                
                 if (! empty($form['fields']) && is_array($form['fields'])) {
                     $writer->startElement('key');
                     $writer->writeAttribute('name', 'fields');
                     foreach ($form['fields'] as $fieldID => $field) {
                         if (! (! empty($field['field_title']) || ! empty($field['description']) || ! empty($field['options'])))
                             continue;
-
+                        
                         $writer->startElement('key');
                         $writer->writeAttribute('name', $fieldID);
-
-                        if (!empty($field['field_title']))
+                        
+                        if (! empty($field['field_title']))
                             $this->attWriter('field_title', $writer);
-                        if (!empty($field['description']))
+                        if (! empty($field['description']))
                             $this->attWriter('description', $writer);
-                        if (!empty($field['options']))
+                        if (! empty($field['options']))
                             $this->_writeOptionsLabels($field['options'], $writer);
-
+                        
                         $writer->endElement();
                     }
                     $writer->endElement();
                 }
-                //if (!empty($form['button_title']))
-                //    $this->attWriter('button_title', $writer);
-
+                // if (!empty($form['button_title']))
+                // $this->attWriter('button_title', $writer);
+                
                 $writer->endElement();
             }
             $writer->endElement();
         }
-
+        
         /**
          * user_meta_emails
          */
@@ -192,13 +221,13 @@ class umAdvancedHooksController
             }
             $writer->endElement();
         }
-
+        
         /**
          * user_meta_settings
          */
         $writer->startElement('key');
         $writer->writeAttribute('name', 'user_meta_settings');
-
+        
         $writer->startElement('key');
         $writer->writeAttribute('name', 'login');
         $writer->startElement('key');
@@ -206,22 +235,22 @@ class umAdvancedHooksController
         $this->attWriter('*', $writer);
         $writer->endElement();
         $writer->endElement();
-
+        
         $writer->startElement('key');
         $writer->writeAttribute('name', 'text');
         $this->attWriter('*', $writer);
         $writer->endElement();
-
+        
         $writer->endElement();
-
+        
         $writer->endElement();
         $writer->endElement();
-
+        
         // $writer->endDocument();
         $writer->flush();
-
+        
         // $userMeta->dump($forms);
-
+        
         echo '<p class="pf_info">Generated.</p>';
         die();
     }
@@ -235,14 +264,15 @@ class umAdvancedHooksController
 
     private function _writeOptionsLabels($options, &$writer)
     {
-        if (!is_array($options)) return;
-
+        if (! is_array($options))
+            return;
+        
         $writer->startElement('key');
         $writer->writeAttribute('name', 'options');
-        foreach($options as $id => $option) {
+        foreach ($options as $id => $option) {
             $writer->startElement('key');
-                $writer->writeAttribute('name', $id);
-                $this->attWriter('label', $writer);
+            $writer->writeAttribute('name', $id);
+            $this->attWriter('label', $writer);
             $writer->endElement();
         }
         $writer->endElement();
